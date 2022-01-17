@@ -1,23 +1,41 @@
-import logo from './logo.svg';
+import {useEffect , useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {BrowserRouter as Router , Route , Routes} from 'react-router-dom';
 import './App.css';
+import Navbar from './components/Navbar';
+import Recipes from './components/recipes/Recipes';
+import {getRecipes} from './actions/recipes'
+import RecipeDetails from './components/RecipeDetails';
+import UpdateRecipe from './components/UpdateRecipe';
+
 
 function App() {
+  const [recipeID , setrecipeID] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(()=>{
+          dispatch(getRecipes());
+  },[dispatch])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div >
+      <Router>
+     
+      <Navbar recipeID={recipeID}/>
+      
+      <div className='container'>
+      
+        <Routes>
+        <Route path='/'  element={ <Recipes setrecipeID={setrecipeID}/>}/>
+        <Route path='/recipe/:id'  element={ <RecipeDetails recipeID={recipeID} setrecipeID={setrecipeID}/>}/>
+        <Route path='/recipe/update/:id'  element={ <UpdateRecipe />}/>
+             
+        </Routes>
+       
+      </div>
+
+      </Router>
+     
     </div>
   );
 }
